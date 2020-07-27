@@ -1,8 +1,36 @@
 // Created by yujitai
+#include <stdio.h>
+#include <stdlib.h>
+
 #include <map>
 #include <list>
 #include <string.h>
 #include <memory>
+
+#include <iostream>
+using namespace std;
+
+// Invalid read/write
+void test06() {
+    char *buffer = (char *)malloc(5);
+    strcpy(buffer, "01234");
+    for (int i = 0; i < 5; ++i)
+	cout << "buffer[" << i << "]=" << buffer[i] << endl;
+
+    cout << "buffer[5]=" << buffer[5] << endl;
+    free(buffer);
+}
+
+// overlap,already optimiz?
+void test07() {
+    char a[] = "abcdefghijk";
+    memcpy(a+1, a, 5);
+    cout << a << endl;
+}
+
+void test08() {
+    char* p = (char*)malloc(-1);
+}
 
 void test01() {
    static char* p = new char[1024];
@@ -86,6 +114,10 @@ int main() {
 
     // 养成好习惯,释放全局指针,这样如果发生上面的情况valgrind可以帮助精确定位绝对丢失，否则会 reachable 会掩盖绝对丢失
     delete g_stream_mgr; // definitely lost and indirectly lost
+
+    test06();
+    // test07();
+    // test08();
 
     return 0;
 }
